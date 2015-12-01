@@ -9,7 +9,7 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
-import utd.persistentDataStore.datastoreServer.commands.ServerCommand;
+import utd.persistentDataStore.datastoreServer.commands.*;
 import utd.persistentDataStore.utils.ServerException;
 import utd.persistentDataStore.utils.StreamUtil;
 
@@ -63,6 +63,39 @@ public class DatastoreServer
 	private ServerCommand dispatchCommand(InputStream inputStream) throws ServerException
 	{
 		// Need to implement
+
+
+		try {
+			String command = StreamUtil.readLine(inputStream);
+
+
+			if (command.equals("write")) {
+				return new WriteCommand();
+			}
+
+			else if (command.equals("read")) {
+                return new ReadCommand();
+            }
+
+            else if (command.equals("delete")) {
+                return new DeleteCommand();
+            }
+
+            else if (command.equals("directory")) {
+                return new DirectoryCommand();
+            }
+
+			else {
+
+				System.out.println("Unknown command");
+				return null;
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
 		return null;
 	}
 
