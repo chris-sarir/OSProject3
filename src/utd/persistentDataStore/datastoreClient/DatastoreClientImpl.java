@@ -34,7 +34,34 @@ public class DatastoreClientImpl implements DatastoreClient
     public byte[] read(String name) throws ClientException
 	{
 		logger.debug("Executing Read Operation");
-		return null;
+		byte[] result = null;
+		
+		try {
+			logger.debug("Opening Socket");
+			Socket socket = new Socket();
+			SocketAddress saddr = new InetSocketAddress(address, port);
+			socket.connect(saddr);
+			InputStream inputStream = socket.getInputStream();
+			OutputStream outputStream = socket.getOutputStream();
+			
+			logger.debug("Writing Message");
+			StreamUtil.writeLine("read\n", outputStream);
+			StreamUtil.writeLine(name, outputStream);
+			
+			logger.debug("Reading Response");
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			int ch;
+			while((ch = inputStream.read()) != '\n') {
+				baos.write(ch);
+			}
+			
+			result = baos.toByteArray();
+			//logger.debug("Response " + result);
+		}
+		catch (IOException ex) {
+			throw new ClientException(ex.getMessage(), ex);
+		}
+		return result;
 	}
 
 	/* (non-Javadoc)
