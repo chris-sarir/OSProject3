@@ -46,6 +46,7 @@ public class DatastoreClientImpl implements DatastoreClient
 		byte[] result = null;
 		
 		try {
+			
 			logger.debug("Opening Socket");
 			Socket socket = new Socket();
 			SocketAddress saddr = new InetSocketAddress(address, port);
@@ -60,16 +61,31 @@ public class DatastoreClientImpl implements DatastoreClient
 			logger.debug("Reading Response");
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int ch;
-			while((ch = inputStream.read()) != '\n') {
+			int i = 0;
+			
+			//While loop keeps track of the number of new lines in the stream
+			//Once three are found break the loop
+			//ok\n
+			//data size in ascii bytes\n
+			//N bytes of binary data\n
+			
+			while( i < 3 ){
+				ch = inputStream.read();
 				baos.write(ch);
+				if(ch == '\n'){
+					i++;
+				}
 			}
 			
 			result = baos.toByteArray();
-			//logger.debug("Response " + result);
+			StreamUtil.closeSocket(inputStream);
+			
+			logger.debug("Response " + result);
 		}
 		catch (IOException ex) {
 			throw new ClientException(ex.getMessage(), ex);
 		}
+		
 		return result;
 	}
 
