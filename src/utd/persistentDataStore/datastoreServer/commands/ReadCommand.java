@@ -15,9 +15,11 @@ public class ReadCommand extends ServerCommand {
 		
 		byte[] data = FileUtil.readData(name);
 		
+		sendOK();
+		
 		StreamUtil.writeData(data, outputStream);
 		
-		sendOK();
+		
 	}
 
 }
