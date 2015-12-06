@@ -38,7 +38,7 @@ public class DatastoreClientImpl implements DatastoreClient
 		try {
 			logger.debug("Executing Write Operation");
 
-			String aRequest="write\n"+name+"\n"+data.length+"\n";
+			String aRequest="write\n"+name+"\n" + data.toString() + "\n" + data.length;
 			logger.debug("Opening Socket");
 			Socket socket = new Socket();
 			SocketAddress saddr = new InetSocketAddress(address, port);
@@ -46,10 +46,15 @@ public class DatastoreClientImpl implements DatastoreClient
 			InputStream inputStream = socket.getInputStream();
 			OutputStream outputStream = socket.getOutputStream();
 
-			StreamUtil.writeLine(aRequest,outputStream);
-			StreamUtil.writeData(data,outputStream);
-			String aResponse = StreamUtil.readLine(socket.getInputStream());
-			logger.debug(aResponse);
+			logger.debug("Sending request");
+			StreamUtil.writeData(aRequest.getBytes(),outputStream);
+			logger.debug("Sending Successful");
+			
+			String aResponse = StreamUtil.readLine(inputStream);
+			logger.debug("Response was " + aResponse);
+			
+			StreamUtil.closeSocket(inputStream);
+			logger.debug("Socket Closed");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
