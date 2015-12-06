@@ -18,9 +18,11 @@ public class WriteCommand extends ServerCommand {
 
 		FileUtil.writeData(name, data);
 
-		String response = "ok\n";
+//		String response = "ok\n";
+//
+//		StreamUtil.writeLine(response, outputStream);
 
-		StreamUtil.writeLine(response, outputStream);
+		sendOK();
 
 	}
 
