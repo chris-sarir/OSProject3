@@ -46,9 +46,8 @@ public class DatastoreClientImpl implements DatastoreClient
 			InputStream inputStream = socket.getInputStream();
 			OutputStream outputStream = socket.getOutputStream();
 
-
-
 			StreamUtil.writeLine(aRequest,outputStream);
+			StreamUtil.writeData(data,outputStream);
 			String aResponse = StreamUtil.readLine(socket.getInputStream());
 			logger.debug(aResponse);
 		} catch (IOException e) {
