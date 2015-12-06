@@ -8,7 +8,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
@@ -162,8 +164,37 @@ public class DatastoreClientImpl implements DatastoreClient
 	@Override
     public List<String> directory() throws ClientException
 	{
-		logger.debug("Executing Directory Operation");
-		return null;
+		//logger.debug("Executing Directory Operation");
+		List<String> dir = new ArrayList<String>();
+
+		try {
+
+			//logger.debug("Opening Socket");
+			Socket socket = new Socket();
+			SocketAddress saddr = new InetSocketAddress(address, port);
+			socket.connect(saddr);
+			InputStream inputStream = socket.getInputStream();
+			OutputStream outputStream = socket.getOutputStream();
+
+			//logger.debug("Writing Message: directory");
+			StreamUtil.writeLine("directory\n", outputStream);
+
+			//logger.debug("Reading Message: directory");
+			String directoryData = StreamUtil.readLine(socket.getInputStream());
+			//logger.debug(directoryData);
+			StringTokenizer stk = new StringTokenizer(directoryData,"\n");
+
+			while ( stk.hasMoreTokens() ) {
+				dir.add(stk.nextToken());
+			}
+
+
+		}
+		catch (IOException ex) {
+			throw new ClientException(ex.getMessage(), ex);
+		}
+
+		return dir;
 	}
 
 }
