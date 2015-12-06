@@ -34,14 +34,21 @@ public class DatastoreClientImpl implements DatastoreClient
     public void write(String name, byte data[]) throws ClientException
 	{
 		try {
-			Socket aSocket = null;
 			logger.debug("Executing Write Operation");
-			String aRequest="write\n"+name+"\n"+data.length+"\n";
 
-			aSocket = new Socket(this.address,this.port);
-			OutputStream outStream = aSocket.getOutputStream();
-			StreamUtil.writeLine(aRequest,outStream);
-			String aResponse = StreamUtil.readLine(aSocket.getInputStream());
+			String aRequest="write\n"+name+"\n"+data.length+"\n";
+			logger.debug("Opening Socket");
+			Socket socket = new Socket();
+			SocketAddress saddr = new InetSocketAddress(address, port);
+			socket.connect(saddr);
+			InputStream inputStream = socket.getInputStream();
+			OutputStream outputStream = socket.getOutputStream();
+
+
+
+			StreamUtil.writeLine(aRequest,outputStream);
+			String aResponse = StreamUtil.readLine(socket.getInputStream());
+			logger.debug(aResponse);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
