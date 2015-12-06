@@ -12,16 +12,20 @@ public class WriteCommand extends ServerCommand {
 	public void run() throws IOException, ServerException {
 
 		String name = StreamUtil.readLine(inputStream);
-		String amount = StreamUtil.readLine(inputStream);
-
-		byte[] data = StreamUtil.readData(Integer.parseInt(amount), inputStream);
-
-		FileUtil.writeData(name, data);
-
-//		String response = "ok\n";
-//
-//		StreamUtil.writeLine(response, outputStream);
-
+		logger.debug("Received file name: " + name);
+		String data = StreamUtil.readLine(inputStream);
+		logger.debug("Received data: " + data);
+		
+		byte[] bytes = data.getBytes();
+		int byteLength = bytes.length;
+		int numBits = Integer.bitCount(byteLength);
+		int i = (int)Math.ceil( (numBits / 8) );
+		
+		data += "\n" + StreamUtil.readData(i, inputStream);
+		logger.debug("All bytes recieved");
+		
+		FileUtil.writeData(name, data.getBytes());
+		logger.debug("File created");
 		sendOK();
 
 	}
