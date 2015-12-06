@@ -11,6 +11,7 @@
       <library>
         <CLASSES>
           <root url="jar://$USER_HOME$/Downloads/Project Three (2)/persistentDataStoreTesting/persistentDataStoreTesting/lib/log4j-1.2.14.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/log4j-1.2.14.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

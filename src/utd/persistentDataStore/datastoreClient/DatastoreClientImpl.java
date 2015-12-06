@@ -180,15 +180,15 @@ public class DatastoreClientImpl implements DatastoreClient
 			StreamUtil.writeLine("directory\n", outputStream);
 
 			//logger.debug("Reading Message: directory");
-			String directoryData = StreamUtil.readLine(socket.getInputStream());
-			//logger.debug(directoryData);
-			StringTokenizer stk = new StringTokenizer(directoryData,"\n");
-
-			while ( stk.hasMoreTokens() ) {
-				dir.add(stk.nextToken());
+			int input=0;
+			String buffer="";
+			while((input = inputStream.read()) >= 9){//using (char 8) as end of transmission
+				buffer += ((char)input);
+				if (input == 10){
+					dir.add(buffer);
+					buffer="";
+				}
 			}
-
-
 		}
 		catch (IOException ex) {
 			throw new ClientException(ex.getMessage(), ex);

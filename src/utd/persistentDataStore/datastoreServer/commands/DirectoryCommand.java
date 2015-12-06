@@ -13,15 +13,15 @@ public class DirectoryCommand extends ServerCommand {
 		File file = new File(System.getProperty("user.dir"));
 		String[] names = file.list();
 		String directoryInfo="OK\n";
-		Integer count=names.length;
 
-		directoryInfo += count.toString()+"\n";
+		directoryInfo += ((Integer) names.length).toString()+"\n";
 
 		for( String name : names){
 			directoryInfo+=name+"\n";
 		}
 		//System.out.print(directoryInfo);
 		//System.out.println("Sending Directory information");
+		directoryInfo+= ((char)8); //end of file marker
 
 		outputStream.write(directoryInfo.getBytes());
 		outputStream.flush();
