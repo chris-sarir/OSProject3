@@ -33,7 +33,19 @@ public class DatastoreClientImpl implements DatastoreClient
 	@Override
     public void write(String name, byte data[]) throws ClientException
 	{
-		logger.debug("Executing Write Operation");
+		try {
+			Socket aSocket = null;
+			logger.debug("Executing Write Operation");
+			String aRequest="write\n"+name+"\n"+data.length+"\n";
+
+			aSocket = new Socket(this.address,this.port);
+			OutputStream outStream = aSocket.getOutputStream();
+			StreamUtil.writeLine(aRequest,outStream);
+			String aResponse = StreamUtil.readLine(aSocket.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/* (non-Javadoc)
