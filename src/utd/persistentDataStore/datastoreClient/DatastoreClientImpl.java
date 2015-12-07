@@ -184,14 +184,15 @@ public class DatastoreClientImpl implements DatastoreClient
 			StreamUtil.writeLine("directory\n", outputStream);
 
 			//logger.debug("Reading Message: directory");
-			int input=0;
-			String buffer="";
-			while((input = inputStream.read()) >= 9){//using (char 8) as end of transmission
-				buffer += ((char)input);
-				if (input == 10){
-					dir.add(buffer);
-					buffer="";
-				}
+
+			String directoryData = StreamUtil.readLine(socket.getInputStream());
+			dir.add(directoryData);
+			directoryData = StreamUtil.readLine(socket.getInputStream());
+			dir.add(directoryData);
+			int count = Integer.parseInt(directoryData);
+			for(;count >0 ;count++){
+				directoryData = StreamUtil.readLine(socket.getInputStream());
+				dir.add(directoryData);
 			}
 		}
 		catch (IOException ex) {
