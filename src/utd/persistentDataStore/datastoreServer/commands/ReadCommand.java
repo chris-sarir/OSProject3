@@ -18,8 +18,7 @@ public class ReadCommand extends ServerCommand {
 		sendOK();
 		
 		StreamUtil.writeData(data, outputStream);
-		
-		
+		outputStream.close();
 	}
 
 }
