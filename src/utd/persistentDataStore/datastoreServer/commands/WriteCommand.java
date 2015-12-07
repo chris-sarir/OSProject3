@@ -11,23 +11,30 @@ public class WriteCommand extends ServerCommand {
 	@Override
 	public void run() throws IOException, ServerException {
 
+		File dir = new File("data");
+		
+		if(!dir.exists()){
+			dir.mkdir();
+		}
+		
 		String name = StreamUtil.readLine(inputStream);
 		logger.debug("Received file name: " + name);
 		String data = StreamUtil.readLine(inputStream);
-		logger.debug("Received data: " + data);
 		
-		byte[] bytes = data.getBytes();
-		int byteLength = bytes.length;
-		int numBits = Integer.bitCount(byteLength);
-		int i = (int)Math.ceil( (numBits / 8) );
 		
-		data += "\n" + StreamUtil.readData(i, inputStream);
-		logger.debug("All bytes recieved");
+		int d = Integer.parseInt(data);
+		logger.debug("Received data size: " + d);
 		
-		FileUtil.writeData(name, data.getBytes());
+		byte[] dataBin = StreamUtil.readData(d, inputStream);
+		logger.debug("Received data: " + dataBin.length);
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		baos.write((data + "\n").getBytes());
+		baos.write(dataBin);
+		
+		FileUtil.writeData(name, baos.toByteArray());
 		logger.debug("File created");
 		sendOK();
-
 	}
 
 }
